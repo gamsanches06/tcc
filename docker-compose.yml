@@ -1,0 +1,67 @@
+version: "3.2"
+
+services:
+  nginx:
+    build: docker/nginx
+    restart: on-failure
+    volumes:
+      # this will mount the symfony folder which contains the code to the docker container
+      - ${PWD}/project/symfony:/var/www/symfony:delegated
+      # this will mount the nginx logs so that you can check the logs for errors,
+      # without logging into the container
+      - ${PWD}/var/logs/nginx/:/var/log/nginx:delegated
+      # this will create the server config to serve the symfony api
+      - ${PWD}/docker/nginx/symfony.conf:/etc/nginx/conf.d/symfony.conf:delegated
+    ports:
+    - "90:80"
+    depends_on:
+      - php
+      - ui
+    networks:
+      - tcc
+  php:
+    build: docker/php
+    container_name: php
+    restart: on-failure
+    volumes:
+      # this will mount the symfony api folder which contains the code to the docker container
+      - ${PWD}/project/symfony:/var/www/symfony:delegated
+      # this will mount the custom `.ini` to the container
+      - ${PWD}/docker/php/php.ini:/usr/local/etc/php/php.ini:ro
+    networks:
+      - tcc
+  frontend:
+    build: project/frontend
+    restart: on-failure
+    # below line starts the project
+    command: "npm start"
+    depends_on:
+      - php
+    networks:
+      - tcc
+    volumes:
+      # this will mount the ui folder which contains the code to the docker container
+      - ${PWD}/project/frontend:/var/www/frontend:delegated
+      # this will mount the node_modules folder for faster performance
+      - nodemodules:/var/www/frontend/node_modules
+    ports:
+      - "3000:3000"
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    ports:
+      - '4306:3306'
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./logs/mysql/:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootsecret
+      MYSQL_DATABASE: tcc_2022
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+networks:
+  tcc:
+    driver: bridge
+# volumes
+volumes:
+  nodemodules: {}
