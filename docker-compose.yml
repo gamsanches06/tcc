@@ -47,18 +47,19 @@ services:
     ports:
       - "3000:3000"
   mysql:
-    container_name: mysql
     image: mysql:8.0
     ports:
-      - '4306:3306'
+      - '3306:3306'
     volumes:
       - ./mysql:/var/lib/mysql
       - ./logs/mysql/:/var/log/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootsecret
-      MYSQL_DATABASE: tcc_2022
-      MYSQL_USER: user
-      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: 'rootsecret'
+      MYSQL_DATABASE: 'tcc_2022'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'secret'
+    networks:
+      - tcc
 networks:
   tcc:
     driver: bridge
