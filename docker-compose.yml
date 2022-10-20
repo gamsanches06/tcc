@@ -16,7 +16,6 @@ services:
     - "90:80"
     depends_on:
       - php
-      - frontend
     networks:
       - tcc
   php:
