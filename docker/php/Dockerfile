@@ -28,6 +28,8 @@ RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} >
     && printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini \
     && "date"
 
+RUN docker-php-ext-install pdo_mysql && docker-php-ext-enable pdo_mysql
+
 CMD ["php-fpm", "-F"]
 
 COPY . /var/www/symfony
