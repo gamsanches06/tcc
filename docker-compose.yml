@@ -30,22 +30,6 @@ services:
       - ${PWD}/docker/php/php.ini:/usr/local/etc/php/php.ini:ro
     networks:
       - tcc
-  frontend:
-    build: project/frontend
-    restart: on-failure
-    # below line starts the project
-    command: "npm start"
-    depends_on:
-      - php
-    networks:
-      - tcc
-    volumes:
-      # this will mount the ui folder which contains the code to the docker container
-      - ${PWD}/project/frontend:/var/www/frontend:delegated
-      # this will mount the node_modules folder for faster performance
-      - nodemodules:/var/www/frontend/node_modules
-    ports:
-      - "3000:3000"
   mysql:
     container_name: mysql
     image: mysql:8.0
