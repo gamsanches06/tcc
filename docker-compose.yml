@@ -27,6 +27,8 @@ services:
       - ${PWD}/project/symfony:/var/www/symfony:delegated
       # this will mount the custom `.ini` to the container
       - ${PWD}/docker/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ${PWD}/docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ${PWD}/docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini 
     networks:
       - tcc
   mysql:
