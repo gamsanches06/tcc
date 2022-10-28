@@ -29,8 +29,6 @@ class DataSymfonyController extends AbstractFOSRestController
         $timediff = $endtime - $starttime;
 
         return new JsonResponse([
-            'time' => $starttime,
-            'timepost' => $endtime,
             'elapsedTime' => sprintf('%0.2f', $timediff),
             'code' => 'ok'
         ]);
@@ -98,8 +96,6 @@ class DataSymfonyController extends AbstractFOSRestController
         $timediff = $endtime - $starttime;
 
         return new JsonResponse([
-            'time' => $starttime,
-            'timepost' => $endtime,
             'elapsedTime' => sprintf('%0.2f', $timediff),
             'numberOfInsertedItems' => $limit,
             'code' => 'ok'
