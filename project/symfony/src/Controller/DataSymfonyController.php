@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DataSymfonyController extends AbstractFOSRestController
@@ -38,16 +39,21 @@ class DataSymfonyController extends AbstractFOSRestController
     /**
      * @Post("/inserir", name="insert_data")
      */
-    public function postData(ManagerRegistry $doctrine)
+    public function postData(ManagerRegistry $doctrine, Request $request)
     {
         set_time_limit(50000000000000);
         $starttime = microtime(true);
+
+        $limit = $request->get('limit');
 
         $entityManager = $doctrine->getManager();
         $dataJson = file_get_contents(__DIR__ . "/../../data.json");
 
         $dataArray = json_decode($dataJson, true);
-        for ($i = 0; $i < count($dataArray); $i++) {
+        if (empty($limit)){
+            $limit = count($dataArray);
+        }
+        for ($i = 0; $i < $limit; $i++) {
             $dataSymfony = new DataSymfony();
             foreach ($dataArray[$i] as $key => $data) {
                 switch ($key) {
@@ -95,6 +101,7 @@ class DataSymfonyController extends AbstractFOSRestController
             'time' => $starttime,
             'timepost' => $endtime,
             'elapsedTime' => sprintf('%0.2f', $timediff),
+            'numberOfInsertedItems' => $limit,
             'code' => 'ok'
         ]);
 
