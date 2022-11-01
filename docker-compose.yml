@@ -27,8 +27,16 @@ services:
       - ${PWD}/project/symfony:/var/www/symfony:delegated
       # this will mount the custom `.ini` to the container
       - ${PWD}/docker/php/php.ini:/usr/local/etc/php/php.ini:ro
-      - ${PWD}/docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-      - ${PWD}/docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini 
+    networks:
+      - tcc
+  node:
+    build: project/node
+    container_name: node
+    restart: on-failure
+    command: npm run dev
+    volumes:
+      # this will mount the node api folder which contains the code to the docker container
+      - ${PWD}/project/node:/var/www/node:delegated
     networks:
       - tcc
   mysql:
@@ -43,6 +51,28 @@ services:
       MYSQL_DATABASE: 'tcc_2022'
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'secret'
+    networks:
+      - tcc
+  spring:
+    container_name: spring
+    depends_on:
+      - mysql
+    build: project/spring
+    restart: on-failure
+    ports:
+      - '6868:6868'
+    environment:
+      SPRING_APPLICATION_JSON: '{
+       "spring.datasource.url"  : "jdbc:mysql://mysql:3306/tcc_2022",
+       "spring.datasource.username" : "root",
+       "spring.datasource.password" : "rootsecret",
+       "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
+       "spring.jpa.hibernate.ddl-auto" : "update"
+     }'
+    volumes:
+      - ${PWD}/project/spring:/var/www/spring:delegated
+    stdin_open: true
+    tty: true
     networks:
       - tcc
 networks:

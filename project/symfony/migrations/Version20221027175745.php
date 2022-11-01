@@ -20,6 +20,8 @@ final class Version20221027175745 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $starttime = microtime(true);
+
 
         $dataJson = file_get_contents(__DIR__ . "/../data.json");
 
@@ -49,6 +51,10 @@ final class Version20221027175745 extends AbstractMigration
 
             $this->addSql($sql);
         }
+        $endtime = microtime(true);
+        $timediff = ($endtime - $starttime);
+        
+        echo "ELAPSED TIME = " . sprintf('%0.2f', $timediff);
     }
 
     public function down(Schema $schema): void

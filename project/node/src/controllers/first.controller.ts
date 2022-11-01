@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 const { performance } = require('perf_hooks');
-import data from "../../../data/data.json";
+import data from "./data.json";
 const mysql = require('mysql2');
 
 const connection = mysql.createConnection({
