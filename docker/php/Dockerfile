@@ -9,7 +9,8 @@ RUN apk update \
         zlib \
         zlib-dev \
         patch \
-        icu-dev
+        icu-dev 
+
 
 # install php dependencies
 RUN apk add --no-cache $PHPIZE_DEPS \
