@@ -5,8 +5,6 @@ services:
     build: docker/nginx
     restart: on-failure
     volumes:
-      # this will mount the symfony folder which contains the code to the docker container
-      - ${PWD}/project/symfony:/var/www/symfony:delegated
       # this will mount the nginx logs so that you can check the logs for errors,
       # without logging into the container
       - ${PWD}/var/logs/nginx/:/var/log/nginx:delegated
